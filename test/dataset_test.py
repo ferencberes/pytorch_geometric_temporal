@@ -7,8 +7,9 @@ from torch_geometric_temporal.signal import DynamicGraphTemporalSignal
 
 from torch_geometric_temporal.dataset import METRLADatasetLoader, PemsBayDatasetLoader
 from torch_geometric_temporal.dataset import ChickenpoxDatasetLoader, PedalMeDatasetLoader, WikiMathsDatasetLoader
+from torch_geometric_temporal.dataset import TwitterTennisDatasetLoader
 
- 
+
 def get_edge_array(n_count):
     return np.array([edge for edge in nx.gnp_random_graph(n_count, 0.1).edges()]).T
 
@@ -144,6 +145,32 @@ def test_pemsbay_task_generator():
             assert snapshot.edge_attr.shape == (2694, )
             assert snapshot.x.shape == (325, 2, 6)
             assert snapshot.y.shape == (325, 2, 5)
+            
+def test_twitter_tennis_rg17():
+    loader = TwitterTennisDatasetLoader(event_id="rg17")
+    dataset = loader.get_dataset()
+    edges_in_snapshots = [11514, 13483, 13392, 14987, 12316, 12665, 14216, 13153, 11522, 12064, 16451, 12049, 18346, 13327, 40117]
+    for epoch in range(3):
+        i = 0
+        for snapshot in dataset:
+            assert snapshot.edge_index.shape == (2, edges_in_snapshots[i])
+            assert snapshot.edge_attr.shape == (edges_in_snapshots[i], )
+            assert snapshot.x.shape == (74983,)
+            assert snapshot.y.shape == (74983,)
+            i += 1
+        
+def test_twitter_tennis_uo17():
+    loader = TwitterTennisDatasetLoader(event_id="uo17")
+    dataset = loader.get_dataset()
+    edges_in_snapshots = [23670, 24229, 20012, 19017, 16411, 18020, 19506, 24688, 16553, 28957, 23999, 25276, 27282, 28094]
+    for epoch in range(3):
+        i = 0
+        for snapshot in dataset:
+            assert snapshot.edge_index.shape == (2, edges_in_snapshots[i])
+            assert snapshot.edge_attr.shape == (edges_in_snapshots[i], )
+            assert snapshot.x.shape == (99190,)
+            assert snapshot.y.shape == (99190,)
+            i += 1
 
 def test_discrete_train_test_split_static():
     loader = ChickenpoxDatasetLoader()
