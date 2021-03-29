@@ -8,7 +8,8 @@ class TwitterTennisDatasetLoader(object):
     """
     A dataset of Twitter mention graphs related to major tennis tournaments from 2017. Nodes are Twitter accounts and edges are mentions between them. Node labels change from day to day as they indicate whether a given node (Twitter account) belongs to a tennis player who played on that day. By setting the 'event_id' parameter, you can choose to load the mention network for Roland-Garros 2017 (rg17) or USOpen 2017 (uo17). Find more details about this data set in the 'Temporal Walk Based Centrality Metric for Graph Streams'. paper.
     """
-    def __init__(self, event_id="rg17"):
+    def __init__(self, event_id="rg17", N=None):
+        self.N = N
         if event_id in ["rg17","uo17"]:
             self.event_id = event_id
         else:
@@ -17,6 +18,8 @@ class TwitterTennisDatasetLoader(object):
 
     def _read_web_data(self):
         fname = "twitter_tennis_%s.json" % self.event_id
+        if self.N != None:
+            fname = fname.replace(".json","_N%i.json" % self.N)
         url = "https://raw.githubusercontent.com/ferencberes/pytorch_geometric_temporal/developer/dataset/" + fname 
         self._dataset = json.loads(urllib.request.urlopen(url).read())
         #with open("/home/fberes/git/pytorch_geometric_temporal/dataset/"+fname) as f:
