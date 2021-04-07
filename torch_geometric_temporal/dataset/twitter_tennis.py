@@ -35,12 +35,14 @@ class TwitterTennisDatasetLoader(object):
     ----------
     event_id : str
         Choose to load the mention network for Roland-Garros 2017 ("rg17") or USOpen 2017 ("uo17")
+    N : int <= 1000
+        Number of most popular nodes to load. By default N=1000. Each snapshot contains the graph induced by these nodes.
     feature_mode : str
         None : load raw degree and transitivity node features
         "encoded" : load onehot encoded degree and transitivity node features
         "diagonal" : set identity matrix as node features
-    N : int <= 1000
-        Number of most popular nodes to load. By default N=1000. Each snapshot contains the graph induced by these nodes.
+    target_offset : int
+        Set the snapshot offset for the node labels to be predicted. By default node labels for the next snapshot are predicted (target_offset=1).
     """
     def __init__(self, event_id="rg17", N=None, feature_mode="encoded", target_offset=1):
         self.N = N
@@ -60,7 +62,7 @@ class TwitterTennisDatasetLoader(object):
         url = "https://raw.githubusercontent.com/ferencberes/pytorch_geometric_temporal/developer/dataset/" + fname 
         self._dataset = json.loads(urllib.request.urlopen(url).read())
         #with open("/home/fberes/git/pytorch_geometric_temporal/dataset/"+fname) as f:
-            self._dataset = json.load(f)
+        #    self._dataset = json.load(f)
 
     def _get_edges(self):
         edge_indices = []

@@ -11,8 +11,9 @@ if len(sys.argv) > 5:
     mode = sys.argv[5]
 else:
     mode = None
+print(mode)
 
-loader = TwitterTennisDatasetLoader(event_id, N, mode, target_offset=offset)
+loader = TwitterTennisDatasetLoader(event_id, N, mode, offset)
 dataset = loader.get_dataset()
 
 train_dataset, test_dataset = temporal_signal_split(dataset, train_ratio=0.5)
@@ -69,5 +70,5 @@ for time, snapshot in enumerate(test_dataset):
     test_mse.append(new_cost.detach().numpy())
 cost = cost / (time+1)
 print("test mse:", cost.detach().numpy())
-print(list(zip(range(60,120),test_mse)))
+#print(list(zip(range(60,120),test_mse)))
 print("done")
